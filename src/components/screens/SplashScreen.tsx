@@ -1,20 +1,47 @@
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Shield, Activity, Heart } from 'lucide-react';
+import { Shield, Activity, Heart, LogIn } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 interface SplashScreenProps {
   onGetStarted: () => void;
 }
 
 export function SplashScreen({ onGetStarted }: SplashScreenProps) {
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
+
   return (
     <motion.div
-      className="min-h-screen gradient-calm flex flex-col items-center justify-center px-6 py-12"
+      className="min-h-screen gradient-calm flex flex-col items-center justify-center px-6 py-12 relative"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
+      {/* Auth button */}
+      <div className="absolute top-4 right-4">
+        {user ? (
+          <Button
+            variant="subtle"
+            size="sm"
+            onClick={() => signOut()}
+          >
+            Sign Out
+          </Button>
+        ) : (
+          <Button
+            variant="subtle"
+            size="sm"
+            onClick={() => navigate('/auth')}
+          >
+            <LogIn className="w-4 h-4 mr-2" />
+            Sign In
+          </Button>
+        )}
+      </div>
+
       {/* Floating decorative elements */}
       <motion.div
         className="absolute top-20 left-10 w-20 h-20 rounded-full bg-primary/10 blur-2xl"
